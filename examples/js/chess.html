@@ -116,7 +116,7 @@ ChessApp = (function(){
 			instantiators: {
 				'Piece': function(initData){
 					var i = initData.index;
-					var array = initData.color === 'white' ? whitePieces : blackPieces;
+					var array = whitePieces;
 					var object3d = array[i];
 					gameObjects.add(object3d);
 					return object3d;
