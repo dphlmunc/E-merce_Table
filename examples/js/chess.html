@@ -30,12 +30,7 @@ ChessApp = (function(){
 		tableHeight: 0,//chess board is raised to be on top of table
 		dragPlaneSize: 1000,//boundary for dragging pieces, should be larger than boardSize
 		pieces: {
-			king: {modelFile: 'king', count: 1},
-			queen: {modelFile: 'queen', count: 1},
-			bishop: {modelFile: 'bishop', count: 2},
-			knight: {modelFile: 'knight', count: 2},
-			rook: {modelFile: 'rook', count: 2},
-			pawn: {modelFile: 'pawn', count: 8}
+			knight: {modelFile: 'cube', count: 1}
 		},
 		pieceWidth: 16,
 		board: {modelFile: 'board', width: 50, height: 1},
@@ -102,9 +97,6 @@ ChessApp = (function(){
 				object.userData.pieceType = names[i];
 				object.userData.pieceColor = 'white';
 				whitePieces[i] = object;
-				var objectClone = object.clone();
-				objectClone.userData.pieceColor = 'black';
-				blackPieces[i] = objectClone;
 				//Set the black color later.
 			}
 			onComplete();
@@ -118,7 +110,7 @@ ChessApp = (function(){
 		var whiteTint = new THREE.Color(1, 1, 1);
 		var blackTint = new THREE.Color(0.2, 0.2, 0.2);
 		whitePieces = cloneModels(whitePieces, whiteTint);
-		blackPieces = cloneModels(blackPieces, blackTint);
+//		blackPieces = cloneModels(blackPieces, blackTint);
 
 		sceneSync = new altspace.utilities.behaviors.SceneSync(instanceRef, {
 			instantiators: {
@@ -126,19 +118,6 @@ ChessApp = (function(){
 					var i = initData.index;
 					var array = initData.color === 'white' ? whitePieces : blackPieces;
 					var object3d = array[i];
-					var limit = CONFIG.dragPlaneSize;
-					object3d.addBehaviors(
-						new altspace.utilities.behaviors.Object3DSync({position: true}),
-						new altspace.utilities.behaviors.Drag({
-							x: {min: -1 * limit, max: limit},
-							z: {min: -1 * limit, max: limit}
-						}),
-						new altspace.utilities.behaviors.HoverColor({
-							//event: 'cursordown',
-							scene: sim.scene,
-							color: new THREE.Color(0.8, 0.2, 0.2)
-						})
-					);
 					gameObjects.add(object3d);
 					return object3d;
 				}
@@ -147,12 +126,11 @@ ChessApp = (function(){
 				if (firstInstance){
 					arrangePieces();
 				}
-				gameObjects.add(board);
+//				gameObjects.add(board);
 				sim.scene.add(gameObjects);
 				for(var i=0; i < whitePieces.length; i++){
 					if (firstInstance) {
-						var white = sceneSync.instantiate('Piece', { index: i, color: 'white' });
-						var black = sceneSync.instantiate('Piece', { index: i, color: 'black' });
+						var white = sceneSync.instantiate('Piece', { index: i });
 					}
 				}
 			}
@@ -200,6 +178,7 @@ ChessApp = (function(){
 	}//end cloneModels
 
 	function arrangePieces(){
+	    return;
 		//Algorithm for determining initial position of pieces.
 		var boardSize = CONFIG.boardSize;
 		var width = CONFIG.pieceWidth * modelScale;
